@@ -88,7 +88,10 @@ services:
       - ./overrides/extract_file_text.py:/app/onyx/file_processing/extract_file_text.py:ro
       - ./overrides/image_summarization.py:/app/onyx/file_processing/image_summarization.py:ro
       - ./overrides/image_analysis.py:/app/onyx/prompts/image_analysis.py:ro
+      - ./overrides/chat_prompts.py:/app/onyx/prompts/chat_prompts.py:ro
+      - ./overrides/llm_loop.py:/app/onyx/chat/llm_loop.py:ro
       - ./overrides/connector.py:/app/onyx/server/documents/connector.py:ro
+      - ./overrides/google_pse_client.py:/app/onyx/tools/tool_implementations/web_search/clients/google_pse_client.py:ro
 
   background:
     image: ${ONYX_BACKEND_IMAGE:-onyxdotapp/onyx-backend:${IMAGE_TAG:-latest}}
@@ -132,7 +135,10 @@ services:
       - ./overrides/extract_file_text.py:/app/onyx/file_processing/extract_file_text.py:ro
       - ./overrides/image_summarization.py:/app/onyx/file_processing/image_summarization.py:ro
       - ./overrides/image_analysis.py:/app/onyx/prompts/image_analysis.py:ro
+      - ./overrides/chat_prompts.py:/app/onyx/prompts/chat_prompts.py:ro
+      - ./overrides/llm_loop.py:/app/onyx/chat/llm_loop.py:ro
       - ./overrides/connector.py:/app/onyx/server/documents/connector.py:ro
+      - ./overrides/google_pse_client.py:/app/onyx/tools/tool_implementations/web_search/clients/google_pse_client.py:ro
     logging:
       driver: json-file
       options:
@@ -212,6 +218,7 @@ services:
     # Optional, only for debugging purposes
     volumes:
       - mcp_server_logs:/var/log/onyx
+      - ./overrides/google_pse_client.py:/app/onyx/tools/tool_implementations/web_search/clients/google_pse_client.py:ro
 
   inference_model_server:
     image: ${ONYX_MODEL_SERVER_IMAGE:-onyxdotapp/onyx-model-server:${IMAGE_TAG:-latest}}

@@ -147,7 +147,7 @@ def _summarize_image_with_ollama(
         "messages": messages,
         "stream": False,
     }
-    response = requests.post(f"{base_url}/api/chat", json=payload, timeout=600)
+    response = requests.post(f"{base_url}/api/chat", json=payload)
     response.raise_for_status()
     data = response.json()
     try:
@@ -173,7 +173,7 @@ def _encode_image_for_llm_prompt(image_data: bytes) -> str:
     return f"data:{mime_type};base64,{base64_encoded_data}"
 
 
-def _resize_image_if_needed(image_data: bytes, max_size_mb: int = 20) -> bytes:
+def _resize_image_if_needed(image_data: bytes, max_size_mb: int = 5) -> bytes:
     """Resize image if it's larger than the specified max size in MB."""
     max_size_bytes = max_size_mb * 1024 * 1024
 
