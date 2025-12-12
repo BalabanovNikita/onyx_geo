@@ -69,7 +69,7 @@ logger = setup_logger()
 # Cycle 4: Calls open_url for some results
 # Cycle 5: Maybe call open_url for some additional results or because last set failed
 # Cycle 6: No more tools available, forced to answer
-MAX_LLM_CYCLES = 6
+MAX_LLM_CYCLES = 3
 
 
 def _build_project_file_citation_mapping(
@@ -161,15 +161,15 @@ def construct_message_history(
     history_before_last_user = simple_chat_history[:last_user_msg_index]
     last_user_message = simple_chat_history[last_user_msg_index]
     messages_after_last_user = simple_chat_history[last_user_msg_index + 1 :]
-    # logger.warning(
-    #     f"{history_before_last_user}"
-    # )
-    # logger.warning(
-    #     f"{last_user_message}"
-    # )
-    # logger.warning(
-    #     f"{messages_after_last_user}"
-    # )
+    logger.warning(
+        f"{history_before_last_user}"
+    )
+    logger.warning(
+        f"{last_user_message}"
+    )
+    logger.warning(
+        f"{messages_after_last_user}"
+    )
 
     # Calculate tokens needed for the last user message and everything after it
     last_user_tokens = last_user_message.token_count
@@ -260,7 +260,7 @@ def _create_project_files_message(
             }
         )
 
-    documents_json = json.dumps({"documents": documents_list}, indent=2)
+    documents_json = json.dumps({"documents": documents_list}, indent=2, ensure_ascii=False)
     message_content = f"Here are some documents provided for context, they may not all be relevant:\n{documents_json}"
 
     # Use pre-calculated token count from project_files
@@ -370,7 +370,7 @@ def translate_history_to_llm_format(
                         "type": "function",
                         "function": {
                             "name": function_name,
-                            "arguments": json.dumps(tool_args) if tool_args else "{}",
+                            "arguments": json.dumps(tool_args, ensure_ascii=False) if tool_args else "{}",
                         },
                     }
                     tool_calls.append(tool_call)
@@ -676,7 +676,7 @@ def run_llm_loop(
                         TOOL_CALL_MSG_FUNC_NAME: tool_call.tool_name,
                         TOOL_CALL_MSG_ARGUMENTS: tool_call.tool_args,
                     }
-                    tool_call_message = json.dumps(tool_call_data)
+                    tool_call_message = json.dumps(tool_call_data, ensure_ascii=False)
                     tool_call_token_count = token_counter(tool_call_message)
 
                     tool_call_msg = ChatMessageSimple(

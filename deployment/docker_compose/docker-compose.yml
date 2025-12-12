@@ -85,13 +85,16 @@ services:
     # Optional, only for debugging purposes
     volumes:
       - api_server_logs:/var/log/onyx
-      - ./overrides/extract_file_text.py:/app/onyx/file_processing/extract_file_text.py:ro
-      - ./overrides/image_summarization.py:/app/onyx/file_processing/image_summarization.py:ro
-      - ./overrides/image_analysis.py:/app/onyx/prompts/image_analysis.py:ro
-      - ./overrides/chat_prompts.py:/app/onyx/prompts/chat_prompts.py:ro
-      - ./overrides/llm_loop.py:/app/onyx/chat/llm_loop.py:ro
-      - ./overrides/connector.py:/app/onyx/server/documents/connector.py:ro
-      - ./overrides/google_pse_client.py:/app/onyx/tools/tool_implementations/web_search/clients/google_pse_client.py:ro
+      - ./overrides/onyx/file_processing/extract_file_text.py:/app/onyx/file_processing/extract_file_text.py:ro
+      - ./overrides/onyx/file_processing/image_summarization.py:/app/onyx/file_processing/image_summarization.py:ro
+      - ./overrides/onyx/prompts/image_analysis.py:/app/onyx/prompts/image_analysis.py:ro
+      - ./overrides/onyx/prompts/chat_prompts.py:/app/onyx/prompts/chat_prompts.py:ro
+      # - ./overrides/onyx/chat/llm_loop.py:/app/onyx/chat/llm_loop.py:ro
+      # - ./overrides/onyx/chat/llm_step.py:/app/onyx/chat/llm_step.py:ro
+      - ./overrides/onyx/tools/tool_implementations/web_search/utils.py:/app/onyx/tools/tool_implementations/web_search/utils.py:ro
+      - ./overrides/onyx/tools/tool_implementations/web_search/models.py:/app/onyx/tools/tool_implementations/web_search/models.py:ro
+      - ./overrides/onyx/server/documents/connector.py:/app/onyx/server/documents/connector.py:ro
+      - ./overrides/onyx/tools/tool_implementations/web_search/clients/google_pse_client.py:/app/onyx/tools/tool_implementations/web_search/clients/google_pse_client.py:ro
 
   background:
     image: ${ONYX_BACKEND_IMAGE:-onyxdotapp/onyx-backend:${IMAGE_TAG:-latest}}
@@ -132,13 +135,16 @@ services:
     # Optional, only for debugging purposes
     volumes:
       - background_logs:/var/log/onyx
-      - ./overrides/extract_file_text.py:/app/onyx/file_processing/extract_file_text.py:ro
-      - ./overrides/image_summarization.py:/app/onyx/file_processing/image_summarization.py:ro
-      - ./overrides/image_analysis.py:/app/onyx/prompts/image_analysis.py:ro
-      - ./overrides/chat_prompts.py:/app/onyx/prompts/chat_prompts.py:ro
-      - ./overrides/llm_loop.py:/app/onyx/chat/llm_loop.py:ro
-      - ./overrides/connector.py:/app/onyx/server/documents/connector.py:ro
-      - ./overrides/google_pse_client.py:/app/onyx/tools/tool_implementations/web_search/clients/google_pse_client.py:ro
+      - ./overrides/onyx/file_processing/extract_file_text.py:/app/onyx/file_processing/extract_file_text.py:ro
+      - ./overrides/onyx/file_processing/image_summarization.py:/app/onyx/file_processing/image_summarization.py:ro
+      - ./overrides/onyx/prompts/image_analysis.py:/app/onyx/prompts/image_analysis.py:ro
+      - ./overrides/onyx/prompts/chat_prompts.py:/app/onyx/prompts/chat_prompts.py:ro
+      # - ./overrides/onyx/chat/llm_loop.py:/app/onyx/chat/llm_loop.py:ro
+      # - ./overrides/onyx/chat/llm_step.py:/app/onyx/chat/llm_step.py:ro
+      - ./overrides/onyx/tools/tool_implementations/web_search/utils.py:/app/onyx/tools/tool_implementations/web_search/utils.py:ro
+      - ./overrides/onyx/tools/tool_implementations/web_search/models.py:/app/onyx/tools/tool_implementations/web_search/models.py:ro
+      - ./overrides/onyx/server/documents/connector.py:/app/onyx/server/documents/connector.py:ro
+      - ./overrides/onyx/tools/tool_implementations/web_search/clients/google_pse_client.py:/app/onyx/tools/tool_implementations/web_search/clients/google_pse_client.py:ro
     logging:
       driver: json-file
       options:
@@ -218,7 +224,7 @@ services:
     # Optional, only for debugging purposes
     volumes:
       - mcp_server_logs:/var/log/onyx
-      - ./overrides/google_pse_client.py:/app/onyx/tools/tool_implementations/web_search/clients/google_pse_client.py:ro
+      - ./overrides/onyx/tools/tool_implementations/web_search/clients/google_pse_client.py:/app/onyx/tools/tool_implementations/web_search/clients/google_pse_client.py:ro
 
   inference_model_server:
     image: ${ONYX_MODEL_SERVER_IMAGE:-onyxdotapp/onyx-model-server:${IMAGE_TAG:-latest}}
@@ -243,10 +249,10 @@ services:
     volumes:
       - model_cache_huggingface:/app/.cache/huggingface/
       - inference_model_server_logs:/var/log/onyx
-      - ./overrides/utils.py:/app/model_server/utils.py:ro
-      - ./overrides/custom_models.py:/app/model_server/custom_models.py:ro
-      - ./overrides/encoders.py:/app/model_server/encoders.py:ro
-      - ./overrides/configs.py:/app/shared_configs/configs.py:ro
+      - ./overrides/model_server/utils.py:/app/model_server/utils.py:ro
+      - ./overrides/model_server/custom_models.py:/app/model_server/custom_models.py:ro
+      - ./overrides/model_server/encoders.py:/app/model_server/encoders.py:ro
+      - ./overrides/shared_configs/configs.py:/app/shared_configs/configs.py:ro
     logging:
       driver: json-file
       options:
@@ -285,10 +291,10 @@ services:
       - indexing_huggingface_model_cache:/app/.cache/huggingface/
       # Optional, only for debugging purposes
       - indexing_model_server_logs:/var/log/onyx
-      - ./overrides/utils.py:/app/model_server/utils.py:ro
-      - ./overrides/custom_models.py:/app/model_server/custom_models.py:ro
-      - ./overrides/encoders.py:/app/model_server/encoders.py:ro
-      - ./overrides/configs.py:/app/shared_configs/configs.py:ro
+      - ./overrides/model_server/utils.py:/app/model_server/utils.py:ro
+      - ./overrides/model_server/custom_models.py:/app/model_server/custom_models.py:ro
+      - ./overrides/model_server/encoders.py:/app/model_server/encoders.py:ro
+      - ./overrides/shared_configs/configs.py:/app/shared_configs/configs.py:ro
     logging:
       driver: json-file
       options:
